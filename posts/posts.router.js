@@ -18,6 +18,10 @@ postRouter.post("/", upload.single("avatar"), async (req, res) => {
   if (!content) {
     return res.status(400).json({ message: "content is required" });
   }
+  if (!req.file) {
+    return res.status(400).json({ error: "No file uploaded" });
+  }
+
   const filePath = req.file.path;
 
   await postModel.create({ content, author: req.userId, avatar: filePath });
