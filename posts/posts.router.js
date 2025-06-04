@@ -19,9 +19,9 @@ postRouter.post("/", upload.single("avatar"), async (req, res) => {
     return res.status(400).json({ message: "content is required" });
   }
 
-  const avatarUrl = req.file?.secure_url;
-  
-  await postModel.create({ content, author: req.userId, avatar: avatarUrl });
+  const filePath = req.file.path;
+
+  await postModel.create({ content, author: req.userId, avatar: filePath });
   return res.status(201).json({ message: "Post created successfully" });
 });
 
