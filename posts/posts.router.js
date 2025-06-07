@@ -87,7 +87,7 @@ postRouter.post("/:id/reactions", isAuth, async (req, res) => {
   }
   if (type === "dislike") {
     if (alreadyLikedIndex !== -1) {
-      post.reactions.dislikes.splice(alreadyLikedIndex, 1);
+      post.reactions.dislikes.splice(alreadyDislikedIndex, 1);
     } else {
       post.reactions.dislikes.push(req.userId);
     }
