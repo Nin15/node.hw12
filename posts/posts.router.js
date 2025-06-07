@@ -92,12 +92,12 @@ postRouter.post("/:id/reactions", isAuth, async (req, res) => {
       post.reactions.dislikes.push(req.userId);
     }
   }
-if (alreadyLikedIndex !== -1 && type === "dislike"){
-  post.reactions.likes.splice(alreadyLikedIndex, 1)
-}
-if (alreadyDislikedIndex !== -1 && type === "like"){
-  post.reactions.dislikes.splice(alreadyDislikedIndex, 1)
-}
+  if (alreadyLikedIndex !== -1 && type === "dislike") {
+    post.reactions.likes.splice(alreadyLikedIndex, 1);
+  }
+  if (alreadyDislikedIndex !== -1 && type === "like") {
+    post.reactions.dislikes.splice(alreadyDislikedIndex, 1);
+  }
 
   await post.save();
   res.send("added successfully");
