@@ -73,10 +73,10 @@ postRouter.post("/:id/reactions", isAuth, async (req, res) => {
     return res.status(400).json({ error: "wrong reaction type" });
   }
   const alreadyDislikedIndex = post.reactions.dislikes.findIndex(
-    (el) => el.id.toString() === req.userId
+    (el) => el._id.toString() === req.userId
   );
   const alreadyLikedIndex = post.reactions.likes.findIndex(
-    (el) => el.id.toString() === req.userId
+    (el) => el._id.toString() === req.userId
   );
   if (type === "like") {
     if (alreadyLikedIndex !== -1) {
@@ -86,7 +86,7 @@ postRouter.post("/:id/reactions", isAuth, async (req, res) => {
     }
   }
   if (type === "dislike") {
-    if (alreadyLikedIndex !== -1) {
+    if (alreadyDislikedIndex !== -1) {
       post.reactions.dislikes.splice(alreadyDislikedIndex, 1);
     } else {
       post.reactions.dislikes.push(req.userId);
