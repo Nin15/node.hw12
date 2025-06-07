@@ -2,6 +2,7 @@ const { Router } = require("express");
 const postModel = require("../models/post.model");
 const { isValidObjectId } = require("mongoose");
 const { deleteFromCloudinary, upload } = require("../config/cloudinary.config");
+const isAuth = require("../middleware/isAuth.middleware");
 
 const postRouter = Router();
 
@@ -63,4 +64,42 @@ postRouter.put("/:id", upload.single("avatar"), async (req, res) => {
     .json({ message: "Post updated successfully!", post: updated });
 });
 
+postRouter.post("/:id/reactions", isAuth, async (req, res) => {
+  const id = req.params.id;
+  const { type } = req.body;
+  const post = await postModel.findById(id);
+  const supportReactionType = ["like", "dislike"];
+  if (!supportReactionType.includes(type)) {
+    return res.status(400).json({ error: "wrong reaction type" });
+  }
+  const alreadyDislikedIndex = post.reactions.dislikes.findIndex(
+    (el) => el.id.toString() === req.userId
+  );
+  const alreadyLikedIndex = post.reactions.likes.findIndex(
+    (el) => el.id.toString() === req.userId
+  );
+  if (type === "like") {
+    if (alreadyLikedIndex !== -1) {
+      post.reactions.likes.splice(alreadyLikedIndex, 1);
+    } else {
+      post.reactions.likes.push(req.userId);
+    }
+  }
+  if (type === "dislike") {
+    if (alreadyLikedIndex !== -1) {
+      post.reactions.dislikes.splice(alreadyLikedIndex, 1);
+    } else {
+      post.reactions.dislikes.push(req.userId);
+    }
+  }
+if (alreadyLikedIndex !== -1 && type === "dislike"){
+  post.reactions.likes.splice(alreadyLikedIndex, 1)
+}
+if (alreadyDislikedIndex !== -1 && type === "like"){
+  post.reactions.dislikes.splice(alreadyDislikedIndex, 1)
+}
+
+  await post.save();
+  res.send("added successfully");
+});
 module.exports = postRouter;

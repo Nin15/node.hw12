@@ -13,6 +13,10 @@ const postSchema = new mongoose.Schema(
     avatar: {
       type: String,
     },
+    reactions: {
+      likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
+      dislikes: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
+    },
   },
   { timestamps: true }
 );
