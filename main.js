@@ -39,8 +39,11 @@ app.post("/upload", upload.single("image"), (req, res) => {
 });
 
 //! !!!
-connectToDb().then((res) => {
-  app.listen(3000, () => {
-    console.log("server running on http://localhost:3000");
-  });
-});
+// connectToDb().then((res) => {
+//   app.listen(3000, () => {
+//     console.log("server running on http://localhost:3000");
+//   });
+// });
+connectToDb();
+
+module.exports = app;
