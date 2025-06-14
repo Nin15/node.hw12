@@ -12,6 +12,12 @@ const multer = require("multer");
 const path = require("path");
 const storage = require("./config/cloudinary.config");
 const { upload } = require("./config/cloudinary.config");
+const swagger = require("./swagger");
+const swaggerJSDoc = require("swagger-jsdoc");
+const swaggerUI = require("swagger-ui-express");
+
+const specs = swaggerJSDoc(swagger);
+app.use("/docs", swaggerUI.serve, swaggerUI.setup(specs));
 // const storage = multer.diskStorage({
 //   desination: (req, file, cb) => {
 //     cb(null, "uploads");
@@ -21,7 +27,6 @@ const { upload } = require("./config/cloudinary.config");
 //   },
 // });
 
-connectToDb();
 app.get("/", (req, res) => {
   res.send("hello world");
 });
@@ -33,6 +38,9 @@ app.post("/upload", upload.single("image"), (req, res) => {
   return res.send(req.file);
 });
 
-app.listen(3000, () => {
-  console.log("server running on http://localhost:3000");
+//! !!!
+connectToDb().then((res) => {
+  app.listen(3000, () => {
+    console.log("server running on http://localhost:3000");
+  });
 });

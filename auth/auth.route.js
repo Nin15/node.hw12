@@ -8,6 +8,39 @@ require("dotenv").config();
 
 const authRouter = Router();
 
+/**
+ * @swagger
+ * /auth/sign-up:
+ *   post:
+ *     summary: Register a new user
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - fullName
+ *               - email
+ *               - password
+ *             properties:
+ *               fullName:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *                 format: email
+ *               password:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: User registered successfully
+ *       400:
+ *         description: Validation error or user already exists
+ *       500:
+ *         description: Internal server error
+ */
+
 authRouter.post("/sign-up", async (req, res) => {
   try {
     const { error } = userSchema.validate(req.body || {});
@@ -26,6 +59,53 @@ authRouter.post("/sign-up", async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
+/**
+ * @swagger
+ * /auth/sign-in:
+ *   post:
+ *     summary: Login a user
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: user@example.com
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 example: mySecret123
+ *     responses:
+ *       200:
+ *         description: JWT token returned
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *       400:
+ *         description: Invalid credentials or missing fields
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: email or password is invalid
+ */
 
 authRouter.post("/sign-in", async (req, res) => {
   console.log("BODY:", req.body);
@@ -54,6 +134,21 @@ authRouter.post("/sign-in", async (req, res) => {
 
   res.json(token);
 });
+
+/**
+ * @swagger
+ * /auth/current-user:
+ *   get:
+ *     summary: Get current authenticated user
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: User object
+ *       401:
+ *         description: Unauthorized
+ */
 
 authRouter.get("/current-user", isAuth, async (req, res) => {
   const user = await userModel.findById(req.userId);
