@@ -290,6 +290,6 @@ postRouter.post("/:id/reactions", isAuth, async (req, res) => {
   }
 
   await post.save();
-  res.send("added successfully");
+  res.json({ message: "added successfully" });
 });
 module.exports = postRouter;
