@@ -20,7 +20,7 @@ const postSchema = new mongoose.Schema(
       likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
       dislikes: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
     },
-    date: { type: String, default: formatted, require: true },
+    date: { type: String, default: formatted },
   },
 
   { timestamps: true }
