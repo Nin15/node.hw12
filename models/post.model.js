@@ -1,4 +1,5 @@
 const { default: mongoose } = require("mongoose");
+const now = new Date(Date.now());
 
 const postSchema = new mongoose.Schema(
   {
@@ -17,7 +18,7 @@ const postSchema = new mongoose.Schema(
       likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
       dislikes: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
     },
-    date: { type: Date, default: Date.now },
+    date: { type: String, default: now.toLocaleString() },
   },
   { timestamps: true }
 );
