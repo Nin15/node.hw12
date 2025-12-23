@@ -152,6 +152,9 @@ authRouter.post("/sign-in", async (req, res) => {
 
 authRouter.get("/current-user", isAuth, async (req, res) => {
   const user = await userModel.findById(req.userId);
+  if (user.email !== "ninnin@gmail.com") {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
   res.json(user);
 });
 
